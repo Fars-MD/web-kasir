@@ -1,0 +1,72 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Category {
+  id    String @id @default(uuid())
+  name  String @unique
+  color String @default("#6D28D9")
+
+  products Product[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Product {
+  id          String  @id @default(uuid())
+  sku         String  @unique
+  barcode     String? @unique
+  name        String
+  categoryId  String
+  tags        String  @default("") // comma-separated: "rokok,barangimport"
+  description String  @default("")
+  costPrice   Int     // in cents (Rp)
+  sellPrice   Int     // in cents (Rp)
+  stock       Int     @default(0)
+  minStock    Int     @default(5)
+  imageUrl    String? @unique
+
+  category Category @relation(fields: [categoryId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Transaction {
+  id            String  @id @default(uuid())
+  subtotal      Int     // in cents
+  discount      Int     @default(0) // in cents
+  total         Int     // in cents
+  paymentMethod String  @default("cash") // cash | qris | transfer
+  amountPaid    Int?    // in cents
+  change        Int?    // in cents
+  cashierId     String  @default("admin")
+  tabLabel      String  @default("Tab 1")
+  status        String  @default("completed") // completed | voided
+
+  items TransactionItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model TransactionItem {
+  id          String @id @default(uuid())
+  transactionId String
+  productId     String
+  productName   String
+  quantity      Int
+  unitPrice     Int // in cents
+  subtotal      Int // in cents
+  discount      Int @default(0) // in cents
+
+  transaction Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+}
