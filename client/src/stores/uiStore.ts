@@ -8,7 +8,7 @@ interface Toast {
 
 interface UIStore {
   toasts: Toast[]
-  currentPage: 'pos' | 'products' | 'dashboard' | 'priceList' | 'jumlah' | 'keuntungan'
+  currentPage: 'pos' | 'products' | 'dashboard' | 'priceList' | 'jumlah' | 'keuntungan' | 'riwayat'
 
   addToast: (type: Toast['type'], message: string) => void
   removeToast: (id: string) => void

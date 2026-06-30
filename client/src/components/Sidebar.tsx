@@ -1,4 +1,4 @@
-import { Hop as Home, LayoutGrid, ClipboardList, ChartBar as BarChart3, Keyboard } from 'lucide-react'
+import { Hop as Home, LayoutGrid, ClipboardList, ChartBar as BarChart3, Keyboard, Receipt } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useUIStore } from '../stores/uiStore'
 import { useHaptic } from '../hooks/useAndroid'
@@ -9,6 +9,7 @@ const navItems = [
   { id: 'pos' as const, label: 'Beranda', icon: Home },
   { id: 'products' as const, label: 'Produk', icon: LayoutGrid },
   { id: 'priceList' as const, label: 'Stok', icon: ClipboardList },
+  { id: 'riwayat' as const, label: 'Riwayat', icon: Receipt },
   { id: 'dashboard' as const, label: 'Stats', icon: BarChart3 },
 ]
 

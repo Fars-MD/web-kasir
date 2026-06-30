@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { Search, Download, Printer, Package, TriangleAlert as AlertTriangle } from 'lucide-react'
+import { Search, Download, Printer, Package, AlertTriangle } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useProductStore } from '../stores/productStore'
 import { api } from '../lib/api'
@@ -25,7 +25,8 @@ export function PriceListPage() {
     })
     .sort((a, b) => sortBy === 'name' ? a.name.localeCompare(b.name) : a.sellPrice - b.sellPrice)
 
-  const lowStockCount = filtered.filter(p => p.stock <= p.minStock).length
+  const lowStockCount = filtered.filter(p => p.stock <= p.minStock && p.stock > 0).length
+  const outOfStockCount = filtered.filter(p => p.stock === 0).length
 
   const handlePrint = () => {
     const w = window.open('', '_blank')
@@ -52,9 +53,14 @@ export function PriceListPage() {
             <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-slate-800 dark:text-slate-100">Stok Produk</h1>
             <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
               {filtered.length} produk
+              {outOfStockCount > 0 && (
+                <span className="ml-2 text-danger-600 dark:text-danger-400 flex items-center gap-1 inline-flex">
+                  <AlertTriangle size={10} /> {outOfStockCount} habis
+                </span>
+              )}
               {lowStockCount > 0 && (
                 <span className="ml-2 text-warning-600 dark:text-warning-400 flex items-center gap-1 inline-flex">
-                  <AlertTriangle size={10} /> {lowStockCount} stok rendah
+                  <AlertTriangle size={10} /> {lowStockCount} menipis
                 </span>
               )}
             </p>
@@ -117,10 +123,19 @@ export function PriceListPage() {
                 <td className="p-4 text-[12px] font-medium text-slate-700 dark:text-slate-200">{p.name}</td>
                 <td className="p-4 text-[12px] text-slate-500 dark:text-slate-400">{p.category?.name}</td>
                 <td className="p-4 text-[12px]">{p.tags ? <div className="flex flex-wrap gap-1">{p.tags.split(',').map((t,i) => <span key={i} className="px-1.5 py-0.5 bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 text-[10px] rounded-full font-medium">{t.trim()}</span>)}</div> : <span className="text-slate-300 dark:text-slate-600">-</span>}</td>
-                <td className="p-4 text-[12px] text-right font-mono tabular-nums">
-                  <span className={p.stock <= p.minStock ? 'text-warning-600 dark:text-warning-400 font-bold' : 'text-slate-500 dark:text-slate-400'}>
-                    {p.stock}
-                  </span>
+                <td className="p-4 text-[12px] text-right">
+                  <div className="flex items-center justify-end gap-2">
+                    <span className={`px-2 py-0.5 text-[9px] font-bold rounded ${
+                      p.stock === 0
+                        ? 'bg-danger-100 text-danger-600 dark:bg-danger-900/30 dark:text-danger-400'
+                        : p.stock <= p.minStock
+                          ? 'bg-warning-100 text-warning-600 dark:bg-warning-900/30 dark:text-warning-400'
+                          : 'bg-success-100 text-success-600 dark:bg-success-900/30 dark:text-success-400'
+                    }`}>
+                      {p.stock === 0 ? 'HABIS' : p.stock <= p.minStock ? 'MENIPIS' : 'AMAN'}
+                    </span>
+                    <span className="font-mono tabular-nums text-slate-500 dark:text-slate-400">{p.stock}</span>
+                  </div>
                 </td>
                 <td className="p-4 text-[12px] text-right font-mono font-bold text-primary-600 dark:text-primary-400 tabular-nums">{formatCurrency(p.sellPrice)}</td>
               </motion.tr>
@@ -155,7 +170,18 @@ export function PriceListPage() {
               </div>
               <div className="text-right ml-2">
                 <p className="text-[12px] font-mono font-bold text-primary-600 dark:text-primary-400 tabular-nums">{formatCurrency(p.sellPrice)}</p>
-                <p className={`text-[10px] font-mono tabular-nums ${p.stock <= p.minStock ? 'text-warning-600 dark:text-warning-400 font-medium' : 'text-slate-400 dark:text-slate-500'}`}>Stok: {p.stock}</p>
+                <div className="flex items-center justify-end gap-1.5 mt-0.5">
+                  <span className={`px-1.5 py-0.5 text-[8px] font-bold rounded ${
+                    p.stock === 0
+                      ? 'bg-danger-100 text-danger-600 dark:bg-danger-900/30 dark:text-danger-400'
+                      : p.stock <= p.minStock
+                        ? 'bg-warning-100 text-warning-600 dark:bg-warning-900/30 dark:text-warning-400'
+                        : 'bg-success-100 text-success-600 dark:bg-success-900/30 dark:text-success-400'
+                  }`}>
+                    {p.stock === 0 ? 'HABIS' : p.stock <= p.minStock ? 'MENIPIS' : 'AMAN'}
+                  </span>
+                  <span className="text-[10px] font-mono tabular-nums text-slate-400 dark:text-slate-500">{p.stock}</span>
+                </div>
               </div>
             </motion.div>
           ))}
@@ -166,7 +192,8 @@ export function PriceListPage() {
       <div className="shrink-0 p-3 border-t border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800" style={{ paddingBottom: 'calc(0.75rem + env(safe-area-inset-bottom, 0px))' }}>
         <p className="text-[10px] sm:text-[11px] text-slate-400 dark:text-slate-500 font-medium">
           {filtered.length} dari {products.length} produk
-          {lowStockCount > 0 && ` • ${lowStockCount} perlu restok`}
+          {outOfStockCount > 0 && ` • ${outOfStockCount} habis`}
+          {lowStockCount > 0 && ` • ${lowStockCount} menipis`}
         </p>
       </div>
     </div>

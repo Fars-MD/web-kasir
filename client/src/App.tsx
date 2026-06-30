@@ -6,6 +6,7 @@ import { DashboardPage } from './pages/DashboardPage'
 import { PriceListPage } from './pages/PriceListPage'
 import { JumlahPage } from './pages/JumlahPage'
 import { KeuntunganPage } from './pages/KeuntunganPage'
+import { TransactionHistoryPage } from './pages/TransactionHistoryPage'
 import { Toast } from './components/Toast'
 import { useUIStore } from './stores/uiStore'
 import { useThemeStore } from './stores/themeStore'
@@ -89,6 +90,10 @@ export default function App() {
       action: () => !['jumlah', 'keuntungan'].includes(currentPage) && setCurrentPage('priceList'),
     },
     {
+      key: 'r',
+      action: () => !['jumlah', 'keuntungan'].includes(currentPage) && setCurrentPage('riwayat'),
+    },
+    {
       key: 'd',
       action: () => !['jumlah', 'keuntungan'].includes(currentPage) && setCurrentPage('dashboard'),
     },
@@ -102,6 +107,7 @@ export default function App() {
       case 'priceList': return <PriceListPage key="priceList" />
       case 'jumlah': return <JumlahPage key="jumlah" />
       case 'keuntungan': return <KeuntunganPage key="keuntungan" />
+      case 'riwayat': return <TransactionHistoryPage key="riwayat" />
       default: return <POSPage key="pos" />
     }
   }

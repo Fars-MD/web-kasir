@@ -138,17 +138,21 @@ export function ProductCard({ product }: ProductCardProps) {
           <span className="text-3xl select-none opacity-30 dark:opacity-20">{emoji}</span>
         )}
 
-        {/* Badges */}
+        {/* Stock Badges */}
         <div className="absolute top-2 left-2 flex flex-col gap-1">
           {isOut ? (
             <span className="px-2.5 py-1 text-[8px] font-bold bg-danger-500 text-white rounded-lg tracking-wider shadow-sm">
               HABIS
             </span>
-          ) : product.stock <= 10 ? (
+          ) : product.stock <= product.minStock ? (
             <span className="px-2.5 py-1 text-[8px] font-bold bg-warning-500 text-white rounded-lg tracking-wider shadow-sm animate-pulse">
-              Sisa {product.stock}
+              MENIPIS
             </span>
-          ) : null}
+          ) : (
+            <span className="px-2.5 py-1 text-[8px] font-bold bg-success-500 text-white rounded-lg tracking-wider shadow-sm">
+              AMAN
+            </span>
+          )}
         </div>
         <span className="absolute top-2 right-2 px-2 py-0.5 text-[8px] font-semibold bg-white/90 dark:bg-slate-800/90 text-slate-500 dark:text-slate-400 rounded-lg backdrop-blur-sm">
           {product.category?.name}

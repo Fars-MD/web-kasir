@@ -201,7 +201,20 @@ export function ProductsPage() {
                   <td className="p-4 text-[12px]">{p.tags ? <div className="flex flex-wrap gap-1">{p.tags.split(',').slice(0,2).map((t,i) => <span key={i} className="px-2 py-0.5 bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 text-[10px] rounded-full font-medium">{t.trim()}</span>)}{p.tags.split(',').length > 2 && <span className="text-slate-400 dark:text-slate-500 text-[10px]">+{p.tags.split(',').length - 2}</span>}</div> : <span className="text-slate-300 dark:text-slate-600">-</span>}</td>
                   <td className="p-4 text-[12px] text-right font-mono text-slate-500 dark:text-slate-400 tabular-nums">{p.packPrice > 0 ? formatCurrency(p.packPrice) : '-'}</td>
                   <td className="p-4 text-[12px] text-right font-mono font-bold text-primary-600 dark:text-primary-400 tabular-nums">{formatCurrency(p.sellPrice)}</td>
-                  <td className="p-4 text-[12px] text-right font-mono text-slate-500 dark:text-slate-400 tabular-nums">{p.stock}</td>
+                  <td className="p-4 text-[12px] text-right">
+                    <div className="flex items-center justify-end gap-2">
+                      <span className={`px-2 py-0.5 text-[9px] font-bold rounded tabular-nums ${
+                        p.stock === 0
+                          ? 'bg-danger-100 text-danger-600 dark:bg-danger-900/30 dark:text-danger-400'
+                          : p.stock <= p.minStock
+                            ? 'bg-warning-100 text-warning-600 dark:bg-warning-900/30 dark:text-warning-400'
+                            : 'bg-success-100 text-success-600 dark:bg-success-900/30 dark:text-success-400'
+                      }`}>
+                        {p.stock === 0 ? 'HABIS' : p.stock <= p.minStock ? 'MENIPIS' : 'AMAN'}
+                      </span>
+                      <span className="font-mono text-slate-500 dark:text-slate-400 tabular-nums">{p.stock}</span>
+                    </div>
+                  </td>
                   <td className="p-4 text-center">
                     <button onClick={() => handleEdit(p)} className="p-2 hover:bg-primary-50 dark:hover:bg-primary-900/30 hover:text-primary-600 dark:hover:text-primary-400 rounded-xl transition-colors mr-1"><Pencil size={14} /></button>
                     <button onClick={() => handleDelete(p.id)} className="p-2 hover:bg-danger-50 dark:hover:bg-danger-900/30 hover:text-danger-500 rounded-xl transition-colors"><Trash2 size={14} /></button>
@@ -239,7 +252,21 @@ export function ProductsPage() {
                   {p.packPrice > 0 && <div><p className="text-[9px] text-slate-400 dark:text-slate-500">{p.category?.unitLabel || 'Pack'}</p><p className="text-[11px] font-mono text-slate-500 dark:text-slate-400 tabular-nums">{formatCurrency(p.packPrice)}</p></div>}
                   <div><p className="text-[9px] text-slate-400 dark:text-slate-500">Pcs</p><p className="text-[11px] font-mono font-bold text-primary-600 dark:text-primary-400 tabular-nums">{formatCurrency(p.sellPrice)}</p></div>
                 </div>
-                <div className="text-right"><p className="text-[9px] text-slate-400 dark:text-slate-500">Stok</p><p className="text-[11px] font-mono text-slate-500 dark:text-slate-400 tabular-nums">{p.stock}</p></div>
+                <div className="text-right">
+                  <p className="text-[9px] text-slate-400 dark:text-slate-500">Stok</p>
+                  <div className="flex items-center justify-end gap-1.5 mt-0.5">
+                    <span className={`px-1.5 py-0.5 text-[8px] font-bold rounded ${
+                      p.stock === 0
+                        ? 'bg-danger-100 text-danger-600 dark:bg-danger-900/30 dark:text-danger-400'
+                        : p.stock <= p.minStock
+                          ? 'bg-warning-100 text-warning-600 dark:bg-warning-900/30 dark:text-warning-400'
+                          : 'bg-success-100 text-success-600 dark:bg-success-900/30 dark:text-success-400'
+                    }`}>
+                      {p.stock === 0 ? 'HABIS' : p.stock <= p.minStock ? 'MENIPIS' : 'AMAN'}
+                    </span>
+                    <span className="text-[11px] font-mono text-slate-500 dark:text-slate-400 tabular-nums">{p.stock}</span>
+                  </div>
+                </div>
               </div>
             </motion.div>
           ))}
