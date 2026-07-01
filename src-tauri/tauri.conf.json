@@ -1,7 +1,7 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "Kasirku",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "identifier": "com.tokozhafar.kasirku",
   "build": {
     "frontendDist": "../client/dist",
