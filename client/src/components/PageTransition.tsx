@@ -5,12 +5,16 @@ interface PageTransitionProps {
   className?: string
 }
 
+const prefersReduced = typeof window !== 'undefined'
+  ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  : false
+
 export function PageTransition({ children, className = '' }: PageTransitionProps) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -8 }}
+      initial={prefersReduced ? {} : { opacity: 0, y: 8 }}
+      animate={prefersReduced ? {} : { opacity: 1, y: 0 }}
+      exit={prefersReduced ? {} : { opacity: 0, y: -8 }}
       transition={{ duration: 0.2, ease: 'easeOut' }}
       className={className}
     >

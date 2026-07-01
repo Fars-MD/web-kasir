@@ -1,0 +1,13 @@
+{
+  "pkg": {
+    "assets": [
+      "dist/**/*",
+      "node_modules/.prisma/**/*",
+      "node_modules/@prisma/**/*",
+      "prisma/**/*"
+    ],
+    "scripts": [
+      "dist/**/*.js"
+    ]
+  }
+}

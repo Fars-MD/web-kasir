@@ -6,14 +6,20 @@
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
     "dev:server": "cd server && npm run dev",
     "dev:client": "cd client && npm run dev",
-    "build": "cd client && npm run build",
-    "postinstall": "cd client && npm install"
+    "build": "npm run build:client && npm run build:sidecar && npm run build:tauri",
+    "build:client": "cd client && npm run build",
+    "build:sidecar": "bun build --compile --target=bun-windows-x64 --outfile=src-tauri/binaries/server-sidecar server/src/index.ts",
+    "build:tauri": "npx tauri build",
+    "postinstall": "cd client && npm install",
+    "tauri": "tauri"
   },
   "dependencies": {
     "@libsql/client": "^0.17.4",
     "@vercel/node": "^3.0.0"
   },
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "@tauri-apps/cli": "^2.11.4",
+    "concurrently": "^8.2.2",
+    "sharp": "^0.35.2"
   }
 }
