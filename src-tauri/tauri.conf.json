@@ -36,10 +36,15 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ],
-    "externalBin": [],
+    "externalBin": ["binaries/server-sidecar"],
     "windows": {
-      "wix": null,
-      "nsis": null
+      "webviewInstallMode": {
+        "type": "downloadBootstrapper",
+        "silent": false
+      },
+      "nsis": {
+        "installMode": "currentUser"
+      }
     },
     "android": {
       "debugApplicationIdSuffix": ".debug"
