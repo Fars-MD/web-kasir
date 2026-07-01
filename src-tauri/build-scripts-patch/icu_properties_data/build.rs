@@ -1,0 +1,1 @@
+fn main() { println!("cargo:rerun-if-env-changed=ICU4X_DATA_DIR"); }
