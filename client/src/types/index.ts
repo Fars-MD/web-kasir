@@ -55,13 +55,14 @@ export interface Transaction {
 export interface CartItem {
   productId: string
   productName: string
-  quantity: number
-  unitPrice: number
+  sellPrice: number
+  packPrice: number
   costPrice: number
-  subtotal: number
-  discount: number
-  unitType: 'pcs' | 'pack'
+  pcsPerPack: number
+  qtyPcs: number
+  qtyPack: number
   unitLabel: string
+  discount: number
 }
 
 export interface Tab {

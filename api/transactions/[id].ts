@@ -1,13 +1,8 @@
 import { db } from '../../lib/db'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
+import { withSecurity } from '../../lib/security'
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  res.setHeader('Access-Control-Allow-Origin', '*')
-  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS')
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
-
-  if (req.method === 'OPTIONS') return res.status(200).end()
-
+async function handler(req: VercelRequest, res: VercelResponse) {
   const { id } = req.query
 
   if (req.method === 'GET') {
@@ -23,3 +18,5 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   return res.status(405).json({ error: 'Method not allowed' })
 }
+
+export default withSecurity(handler, { methods: ['GET'] })

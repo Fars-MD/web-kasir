@@ -40,7 +40,7 @@ export function BottomSheet({ open, onClose, children, peekHeight, fullHeight }:
     if (h > (getPeekH() + getFullH()) / 2) {
       sheetRef.current.style.height = `${getFullH()}px`
       setExpanded(true)
-    } else if (h < getPeekH() * 1.1) {
+    } else if (delta > 50) {
       onClose()
     } else {
       sheetRef.current.style.height = `${getPeekH()}px`
@@ -76,7 +76,7 @@ export function BottomSheet({ open, onClose, children, peekHeight, fullHeight }:
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
           >
-            <div className="flex justify-center pt-3 pb-2 shrink-0 cursor-grab active:cursor-grabbing">
+            <div className="flex justify-center pt-3 pb-2 shrink-0 cursor-grab active:cursor-grabbing" aria-label="Tarik untuk menutup" role="img">
               <div className="w-10 h-1 bg-slate-200 rounded-full" />
             </div>
             <div className="flex-1 min-h-0 overflow-y-auto px-4 overscroll-contain">

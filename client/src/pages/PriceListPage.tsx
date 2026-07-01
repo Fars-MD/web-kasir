@@ -47,30 +47,30 @@ export function PriceListPage() {
         <div className="flex items-center justify-between mb-3">
           <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-slate-800">Stok Produk</h1>
           <div className="flex gap-1.5">
-            <button onClick={handlePrint} className="flex items-center gap-1.5 px-3 py-2 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors text-[11px] lg:text-[13px] active:scale-[0.97]">
-              <Printer size={13} /><span className="hidden sm:inline">Cetak</span>
+            <button onClick={handlePrint} aria-label="Cetak daftar harga" className="flex items-center gap-1.5 px-3 py-2 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors text-[11px] lg:text-[13px] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400">
+              <Printer size={13} aria-hidden="true" /><span className="hidden sm:inline">Cetak</span>
             </button>
-            <button onClick={handleCSV} className="flex items-center gap-1.5 px-3 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-medium transition-colors text-[11px] lg:text-[13px] active:scale-[0.97] shadow-sm shadow-amber-500/20">
-              <Download size={13} />CSV
+            <button onClick={handleCSV} aria-label="Download CSV" className="flex items-center gap-1.5 px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-xl font-medium transition-colors text-[11px] lg:text-[13px] active:scale-[0.97] shadow-sm shadow-blue-500/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400">
+              <Download size={13} aria-hidden="true" />CSV
             </button>
           </div>
         </div>
         <div className="flex gap-2 flex-wrap">
           <div className="relative flex-1 min-w-[120px]">
             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-            <input type="text" placeholder="Cari..." value={search} onChange={e => setSearch(e.target.value)} className="w-full bg-white border border-slate-200 rounded-xl pl-9 pr-3 py-2.5 text-[12px] lg:text-[13px] focus:outline-none focus:ring-2 focus:ring-amber-200/60 focus:border-amber-300 transition-all" />
+            <input type="search" name="search-product" autoComplete="off" placeholder="Cari\u2026" value={search} onChange={e => setSearch(e.target.value)} className="w-full bg-white border border-slate-200 rounded-xl pl-9 pr-3 py-2.5 text-[12px] lg:text-[13px] focus:outline-none focus:ring-2 focus:ring-blue-200/60 focus:border-blue-300 transition-all" />
           </div>
-          <select value={selectedCat} onChange={e => setSelectedCat(e.target.value)} className="bg-white border border-slate-200 rounded-xl px-3 py-2.5 text-[12px] focus:outline-none focus:ring-2 focus:ring-amber-200/60 focus:border-amber-300 transition-all appearance-none cursor-pointer">
+          <select value={selectedCat} onChange={e => setSelectedCat(e.target.value)} name="filter-category" className="bg-white border border-slate-200 rounded-xl px-3 py-2.5 text-[12px] focus:outline-none focus:ring-2 focus:ring-blue-200/60 focus:border-blue-300 transition-all appearance-none cursor-pointer">
             <option value="all">Semua</option>
             {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
           {allTags.length > 0 && (
-            <select value={selectedTag} onChange={e => setSelectedTag(e.target.value)} className="bg-white border border-slate-200 rounded-xl px-3 py-2.5 text-[12px] focus:outline-none focus:ring-2 focus:ring-amber-200/60 focus:border-amber-300 transition-all appearance-none cursor-pointer">
+            <select value={selectedTag} onChange={e => setSelectedTag(e.target.value)} name="filter-tag" className="bg-white border border-slate-200 rounded-xl px-3 py-2.5 text-[12px] focus:outline-none focus:ring-2 focus:ring-blue-200/60 focus:border-blue-300 transition-all appearance-none cursor-pointer">
               <option value="">Semua Tag</option>
               {allTags.map(t => <option key={t} value={t}>{t}</option>)}
             </select>
           )}
-          <select value={sortBy} onChange={e => setSortBy(e.target.value as typeof sortBy)} className="bg-white border border-slate-200 rounded-xl px-3 py-2.5 text-[12px] focus:outline-none focus:ring-2 focus:ring-amber-200/60 focus:border-amber-300 transition-all appearance-none cursor-pointer">
+          <select value={sortBy} onChange={e => setSortBy(e.target.value as typeof sortBy)} name="sort-by" className="bg-white border border-slate-200 rounded-xl px-3 py-2.5 text-[12px] focus:outline-none focus:ring-2 focus:ring-blue-200/60 focus:border-blue-300 transition-all appearance-none cursor-pointer">
             <option value="name">Nama</option>
             <option value="price">Harga</option>
           </select>
@@ -91,12 +91,12 @@ export function PriceListPage() {
           </tr></thead>
           <tbody className="divide-y divide-slate-100">
             {filtered.length === 0 ? <tr><td colSpan={6} className="p-12 text-center text-slate-400 text-[13px]">Tidak ada produk</td></tr> : filtered.map((p,i) => (
-              <tr key={p.id} className="hover:bg-amber-50/30 transition-colors">
+              <tr key={p.id} className="hover:bg-blue-50/30 transition-colors">
                 <td className="p-4 text-[12px] text-slate-400">{i+1}</td>
                 <td className="p-4 text-[12px] font-medium text-slate-700">{p.name}</td>
                 <td className="p-4 text-[12px] text-slate-500">{p.category?.name}</td>
-                <td className="p-4 text-[12px]">{p.tags ? <div className="flex flex-wrap gap-1">{p.tags.split(',').map((t,i) => <span key={i} className="px-1.5 py-0.5 bg-amber-50 text-amber-600 text-[10px] rounded-full font-medium">{t.trim()}</span>)}</div> : <span className="text-slate-300">-</span>}</td>
-                <td className="p-4 text-[12px] text-right font-mono tabular-nums"><span className={p.stock <= p.minStock ? 'text-amber-600 font-bold' : 'text-slate-500'}>{p.stock}</span></td>
+                <td className="p-4 text-[12px]">{p.tags ? <div className="flex flex-wrap gap-1">{p.tags.split(',').map((t,i) => <span key={i} className="px-1.5 py-0.5 bg-blue-50 text-blue-600 text-[10px] rounded-full font-medium">{t.trim()}</span>)}</div> : <span className="text-slate-300">-</span>}</td>
+                <td className="p-4 text-[12px] text-right font-mono tabular-nums"><span className={p.stock <= p.minStock ? 'text-blue-600 font-bold' : 'text-slate-500'}>{p.stock}</span></td>
                 <td className="p-4 text-[12px] text-right font-mono font-bold text-emerald-600 tabular-nums">{formatCurrency(p.sellPrice)}</td>
               </tr>
             ))}
@@ -114,12 +114,12 @@ export function PriceListPage() {
                 </div>
                 <div className="flex items-center gap-1.5 mt-1 ml-7">
                   <span className="text-[10px] text-slate-400">{p.category?.name}</span>
-                  {p.tags && <div className="flex gap-0.5">{p.tags.split(',').slice(0,2).map((t,i) => <span key={i} className="px-1.5 py-0.5 bg-amber-50 text-amber-600 text-[9px] rounded-full font-medium">{t.trim()}</span>)}</div>}
+                  {p.tags && <div className="flex gap-0.5">{p.tags.split(',').slice(0,2).map((t,i) => <span key={i} className="px-1.5 py-0.5 bg-blue-50 text-blue-600 text-[9px] rounded-full font-medium">{t.trim()}</span>)}</div>}
                 </div>
               </div>
               <div className="text-right ml-2">
                 <p className="text-[12px] font-mono font-bold text-emerald-600 tabular-nums">{formatCurrency(p.sellPrice)}</p>
-                <p className={`text-[10px] font-mono tabular-nums ${p.stock <= p.minStock ? 'text-amber-600 font-medium' : 'text-slate-400'}`}>Stok: {p.stock}</p>
+                <p className={`text-[10px] font-mono tabular-nums ${p.stock <= p.minStock ? 'text-blue-600 font-medium' : 'text-slate-400'}`}>Stok: {p.stock}</p>
               </div>
             </div>
           ))}

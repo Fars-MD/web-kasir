@@ -1,13 +1,8 @@
 import { db } from '../../lib/db'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
+import { withSecurity } from '../../lib/security'
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  res.setHeader('Access-Control-Allow-Origin', '*')
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
-
-  if (req.method === 'OPTIONS') return res.status(200).end()
-
+async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method === 'GET') {
     try {
       const { startDate, endDate, cashierId, paymentMethod } = req.query
@@ -66,22 +61,24 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         }
 
         const product = await db.execute({
-          sql: 'SELECT id, name, "sellPrice", "packPrice", stock FROM "Product" WHERE id = ?',
+          sql: 'SELECT id, name, "sellPrice", "packPrice", "costPrice", "pcsPerPack", stock FROM "Product" WHERE id = ?',
           args: [item.productId]
         })
         if (product.rows.length === 0) {
           return res.status(400).json({ error: `Produk ${item.productId} tidak ditemukan` })
         }
         const p = product.rows[0] as any
-        if (p.stock < item.quantity) {
-          return res.status(400).json({ error: `Stok "${p.name}" tidak cukup (sisa: ${p.stock})` })
+        const unitType = item.unitType === 'pack' && Number(p.packPrice) > 0 ? 'pack' : 'pcs'
+        const pcsPerPack = Math.max(1, Number(p.pcsPerPack) || 1)
+        const stockQty = unitType === 'pack' ? item.quantity * pcsPerPack : item.quantity
+        if (p.stock < stockQty) {
+          return res.status(400).json({ error: `Stok "${p.name}" tidak cukup (sisa: ${p.stock}, butuh: ${stockQty})` })
         }
 
-        const unitType = item.unitType === 'pack' && Number(p.packPrice) > 0 ? 'pack' : 'pcs'
         const unitPrice = unitType === 'pack' ? Number(p.packPrice) : Number(p.sellPrice)
         const itemSubtotal = unitPrice * item.quantity
         serverSubtotal += itemSubtotal
-        validItems.push({ ...item, unitType, unitPrice, subtotal: itemSubtotal, productName: p.name })
+        validItems.push({ ...item, unitType, unitPrice, subtotal: itemSubtotal, productName: p.name, stockQty })
       }
 
       const serverDiscount = typeof discount === 'number' && discount >= 0 ? Math.min(discount, serverSubtotal) : 0
@@ -109,7 +106,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         })
         await db.execute({
           sql: 'UPDATE "Product" SET stock = stock - ? WHERE id = ? AND stock >= ?',
-          args: [item.quantity, item.productId, item.quantity],
+          args: [(item as any).stockQty, item.productId, (item as any).stockQty],
         })
       }
 
@@ -125,3 +122,5 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   return res.status(405).json({ error: 'Method not allowed' })
 }
+
+export default withSecurity(handler, { methods: ['GET', 'POST'], rateLimitMax: 20 })

@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tauri-apps/api": "^2.11.1",
     "canvas-confetti": "^1.9.4",
     "clsx": "^2.1.0",
     "date-fns": "^3.3.1",

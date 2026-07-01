@@ -11,7 +11,7 @@
 
 html, body, #root {
   height: 100%;
-  overscroll-behavior: none;
+  height: -webkit-fill-available;
 }
 
 body {
@@ -20,13 +20,12 @@ body {
   color: #0F172A;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow: hidden;
+  overflow: auto;
+  overflow: overlay;
   -webkit-text-size-adjust: 100%;
   -webkit-touch-callout: none;
   user-select: none;
 }
-
-html { overscroll-behavior-y: contain; }
 
 input[type="text"],
 input[type="number"],
@@ -39,10 +38,19 @@ textarea {
   touch-action: manipulation;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 ::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 10px; }
-::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+::-webkit-scrollbar-thumb { background: #BFDBFE; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #60A5FA; }
 
 .font-mono { font-family: 'JetBrains Mono', 'Fira Code', monospace; }
 
@@ -81,3 +89,30 @@ input[type="number"] { -moz-appearance: textfield; }
 
 .safe-top { padding-top: env(safe-area-inset-top, 0px); }
 .safe-bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }
+
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+@keyframes float-up {
+  0% { transform: translateY(0); opacity: 0.6; }
+  50% { transform: translateY(-8px); opacity: 1; }
+  100% { transform: translateY(0); opacity: 0.6; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.3); }
+  50% { box-shadow: 0 0 0 8px rgba(59, 130, 246, 0); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}

@@ -18,14 +18,14 @@ export function DashboardPage() {
 
   if (!stats) return (
     <div className="p-4 text-slate-400 flex items-center justify-center h-full">
-      <div className="w-8 h-8 border-2 border-amber-200 border-t-amber-500 rounded-full animate-spin" />
+      <div className="w-8 h-8 border-2 border-blue-200 border-t-blue-500 rounded-full animate-spin" />
     </div>
   )
 
   const cards = [
     { label: 'HARI INI', value: stats.today.total, count: stats.today.count, profit: stats.today.profit, pcs: stats.today.totalPcs, icon: TrendingUp, color: 'text-emerald-600', bg: 'bg-emerald-50' },
-    { label: 'MINGGU INI', value: stats.week.total, count: stats.week.count, profit: stats.week.profit, pcs: stats.week.totalPcs, icon: TrendingUp, color: 'text-amber-600', bg: 'bg-amber-50' },
-    { label: 'BULAN INI', value: stats.month.total, count: stats.month.count, profit: stats.month.profit, pcs: stats.month.totalPcs, icon: TrendingUp, color: 'text-amber-600', bg: 'bg-amber-50' },
+    { label: 'MINGGU INI', value: stats.week.total, count: stats.week.count, profit: stats.week.profit, pcs: stats.week.totalPcs, icon: TrendingUp, color: 'text-blue-600', bg: 'bg-blue-50' },
+    { label: 'BULAN INI', value: stats.month.total, count: stats.month.count, profit: stats.month.profit, pcs: stats.month.totalPcs, icon: TrendingUp, color: 'text-blue-600', bg: 'bg-blue-50' },
     { label: 'PRODUK', value: stats.productCount, count: null, profit: null, pcs: null, icon: Package, color: 'text-slate-600', bg: 'bg-slate-100' },
   ]
 
@@ -54,8 +54,8 @@ export function DashboardPage() {
             {c.count !== null && <p className="text-[9px] sm:text-[10px] text-slate-400 mt-1">{c.count} transaksi</p>}
             {c.pcs !== null && c.pcs > 0 && (
               <div className="mt-2 pt-2 border-t border-slate-100 flex items-center gap-1.5">
-                <Hash size={10} className="text-amber-400" />
-                <p className="text-[9px] sm:text-[10px] text-amber-600 font-semibold">{c.pcs} pcs</p>
+                <Hash size={10} className="text-blue-400" />
+                <p className="text-[9px] sm:text-[10px] text-blue-600 font-semibold">{c.pcs} pcs</p>
               </div>
             )}
             {c.profit !== null && (

@@ -1,4 +1,10 @@
-const API_BASE = '/api'
+const IS_TAURI = typeof window.__TAURI__ !== 'undefined'
+const IS_MOBILE = IS_TAURI && /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
+const API_BASE = IS_MOBILE
+  ? 'https://kasirku-flame.vercel.app/api'
+  : IS_TAURI
+    ? 'http://localhost:3001/api'
+    : '/api'
 
 async function request<T>(url: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`${API_BASE}${url}`, {
