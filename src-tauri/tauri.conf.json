@@ -52,13 +52,7 @@
   },
   "plugins": {
     "shell": {
-      "sidecar": true,
-      "scope": [
-        {
-          "name": "binaries/server-sidecar",
-          "sidecar": true
-        }
-      ]
+      "open": true
     }
   }
 }
